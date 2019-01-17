@@ -3,6 +3,7 @@ package com.example.entity;
 import lombok.Data;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -19,7 +20,7 @@ import java.util.Date;
 @Entity
 public class GaugeTemplate implements Serializable{
     private static final long serialVersionUID = 2171661971687207491L;
-
+    @Id
     private Long id;
 
     private String templateName;

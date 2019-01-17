@@ -5,6 +5,8 @@ package com.example.entity;/**
 import lombok.Data;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 import java.util.Date;
 
 /**
@@ -21,6 +23,7 @@ import java.util.Date;
 public class PageLayout {
     private static final long serialVersionUID = 2171661971687207491L;
 
+    @Id
     private Long id;
 
     private String title;
