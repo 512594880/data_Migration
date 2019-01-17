@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface GaugeResultRepositoryNew extends JpaRepository<GaugeResult,Long> {
+    GaugeResult findByTemplateIdAndResultName(Long id);
 }

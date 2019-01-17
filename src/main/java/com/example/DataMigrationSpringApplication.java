@@ -96,7 +96,7 @@ public class DataMigrationSpringApplication implements CommandLineRunner {
 		//插入到2.0中
 		gaugeTemplates.forEach(gaugeTemplate -> {
 			//如果Id不重复
-			if (!gaugeTemplateRepositoryNew.findById(gaugeTemplate.getId()).isPresent()){
+			if (gaugeTemplateRepositoryNew.findOne(gaugeTemplate.getId()) !=null){
 				//关联gauge相关表
 				handleGauge(gaugeTemplate);
 				//关联page表
@@ -121,14 +121,14 @@ public class DataMigrationSpringApplication implements CommandLineRunner {
 		//page_property，有使用以前属性情况，ID相同。
 
 		List<PageLayout> pageLayouts = pageLayoutRepository.findByGaugeTemplateId(gaugeTemplate.getId());
-		pageLayoutRepositoryNew.saveAll(pageLayouts);
+		pageLayoutRepositoryNew.save(pageLayouts);
 		pageLayouts.forEach(pageLayout -> {
 			List<PageLayoutProperty> pageLayoutProperties = pageLayoutPropertyRepository.findByPageLayoutId(pageLayout.getId());
-			pageLayoutPropertyRepositoryNew.saveAll(pageLayoutProperties);
+			pageLayoutPropertyRepositoryNew.save(pageLayoutProperties);
 			Set<Long> pagePropertiesIds = pageLayoutProperties.stream().map(PageLayoutProperty::getPagePropertyId).collect(Collectors.toSet());
 			List<PageProperty> pageProperties = pagePropertyRepository.findByIdIn(pagePropertiesIds);
 			pageProperties.forEach(pageProperty -> {
-				if (!pagePropertyRepositoryNew.findById(pageProperty.getId()).isPresent()){
+				if (pagePropertyRepositoryNew.findOne(pageProperty.getId()) != null){
 					pagePropertyRepositoryNew.save(pageProperty);
 				}
 			});
@@ -140,7 +140,7 @@ public class DataMigrationSpringApplication implements CommandLineRunner {
 		Set<Long> pageLayoutIds = pageLayouts.stream().map(PageLayout::getId).collect(Collectors.toSet());
 		List<PageLayoutBigQuestion> pageLayoutBigQuestions = pageLayoutBigQuestionRepository.findByPageLayoutIdIn(pageLayoutIds);
 		pageLayoutBigQuestions.forEach(pageLayoutBigQuestion -> {
-			BigQuestion bigQuestion = bigQuestionRepository.findById(pageLayoutBigQuestion.getBigQuestionId()).get();
+			BigQuestion bigQuestion = bigQuestionRepository.findOne(pageLayoutBigQuestion.getBigQuestionId());
 			if (bigQuestionRepositoryNew.findByNameAndCreatedDate(bigQuestion.getName()).size() == 0){
 				List<SmallQuestion> smallQuestions = smallQuestionRepository.findByBigQuestionId(bigQuestion.getId());
 
@@ -148,10 +148,10 @@ public class DataMigrationSpringApplication implements CommandLineRunner {
 				ModelMapper modelMapper = new ModelMapper();
 				bigQuestionNew = modelMapper.map(bigQuestion,com.example.newEntity.BigQuestion.class);
 				//插入bigQuestion
-				if (bigQuestionRepositoryNew.findById(bigQuestion.getId()).isPresent()){
+				if (bigQuestionRepositoryNew.findOne(bigQuestion.getId()) != null){
 					bigQuestion.setId(null);
 					bigQuestionRepositoryNew.save(bigQuestionNew);
-					bigQuestionNew = bigQuestionRepositoryNew.findById(pageLayoutBigQuestion.getBigQuestionId()).get();
+					bigQuestionNew = bigQuestionRepositoryNew.findOne(pageLayoutBigQuestion.getBigQuestionId());
 				}else {
 					bigQuestionRepositoryNew.save(bigQuestionNew);
 				}
@@ -163,10 +163,10 @@ public class DataMigrationSpringApplication implements CommandLineRunner {
 					smallQuestion.setId(null);
 					smallQuestion.setBigQuestionId(bigQuestionNew.getId());
 				}
-				smallQuestionRepositoryNew.saveAll(smallQuestions);
+				smallQuestionRepositoryNew.save(smallQuestions);
 				pageLayoutBigQuestion.setBigQuestionId(bigQuestionNew.getId());
 				pageLayoutBigQuestionRepositoryNew.save(pageLayoutBigQuestion);
-//                if (bigQuestionRepositoryNew.findById(bigQuestion.getId()).isPresent()){
+//                if (bigQuestionRepositoryNew.findOne(bigQuestion.getId()).isPresent()){
 //                    bigQuestion.setId(null);
 //                    bigQuestionRepositoryNew.save(bigQuestion);
 //                    pageLayoutBigQuestion.set
@@ -183,6 +183,17 @@ public class DataMigrationSpringApplication implements CommandLineRunner {
 	}
 
 	private  void handleGauge(GaugeTemplate gaugeTemplate) {
+		//关联gaugeResult
+		List<GaugeResult> gaugeResults = gaugeResultRepository.findByTemplateId(gaugeTemplate.getId());
+		gaugeResults.forEach(gaugeResult -> {
+			if (gaugeResultRepositoryNew.findByTemplateIdAndResultName(gaugeTemplate.getId()) == null){
+				if (gaugeResultRepositoryNew.findOne(gaugeResult.getId()) != null){
+					gaugeResult.setId(null);
+				}
+				gaugeResultRepositoryNew.save(gaugeResult);
+			}
+		});
+
 		//插入
 		gaugeTemplateRepositoryNew.save(gaugeTemplate);
 		//关联gauge_template_script
@@ -190,11 +201,11 @@ public class DataMigrationSpringApplication implements CommandLineRunner {
 		gaugeTemplateScripts.forEach(gaugeTemplateScript -> {
 			if (gaugeTemplateScriptRepositoryNew.findByTemplateIdAndScriptId(gaugeTemplateScript.getTemplateId(),gaugeTemplateScript.getScriptId()).size() == 0){
 				//当gauge_template_script不存在时
-				GaugeScript gaugeScript = gaugeScriptRepository.findById(gaugeTemplateScript.getScriptId()).get();
+				GaugeScript gaugeScript = gaugeScriptRepository.findOne(gaugeTemplateScript.getScriptId());
 				if (gaugeScriptRepositoryNew.findByScriptName(gaugeScript.getScriptName()).size() == 0){
 					//量表结果按名称查询不存在时候
 					//验证ID是否存在
-					if (gaugeScriptRepositoryNew.findById(gaugeScript.getId()).isPresent()){
+					if (gaugeScriptRepositoryNew.findOne(gaugeScript.getId())!=null){
 						gaugeScript.setId(null);
 						gaugeScriptRepositoryNew.save(gaugeScript);
 						gaugeTemplateScript.setScriptId(gaugeScript.getId());
@@ -208,7 +219,7 @@ public class DataMigrationSpringApplication implements CommandLineRunner {
 					}
 				}
 
-				if (!gaugeTemplateScriptRepositoryNew.findById(gaugeTemplateScript.getId()).isPresent()){
+				if (gaugeTemplateScriptRepositoryNew.findOne(gaugeTemplateScript.getId())!=null){
 					gaugeTemplateScriptRepositoryNew.save(gaugeTemplateScript);
 				}else {
 					gaugeTemplateScript.setId(null);

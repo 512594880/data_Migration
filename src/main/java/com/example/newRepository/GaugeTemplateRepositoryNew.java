@@ -14,4 +14,5 @@ public interface GaugeTemplateRepositoryNew extends JpaRepository<GaugeTemplate,
     boolean findByTemplateName(String templateName);
 
     boolean findByTemplateNameAndCreatedDate(String templateName, Date createdDate);
+
 }
