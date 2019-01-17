@@ -3,20 +3,25 @@ spring:
       active: dev
   datasource:
     old:
-        jdbc-url: jdbc:mysql://localhost:3306/FirstDataBase?useUnicode=true&characterEncoding=UTF-8
+        type: com.alibaba.druid.pool.DruidDataSource
+        url: jdbc:mysql://localhost:3306/FirstDataBase?useUnicode=true&characterEncoding=UTF-8
         username: root
         password: 123
-        driver-class-name: com.mysql.cj.jdbc.Driver
+        driver-class-name: com.mysql.jdbc.Driver
     new:
-        jdbc-url: jdbc:mysql://localhost:3306/SecondDataBase?useUnicode=true&characterEncoding=UTF-8
+        type: com.alibaba.druid.pool.DruidDataSource
+        url: jdbc:mysql://localhost:3306/SecondDataBase?useUnicode=true&characterEncoding=UTF-8
         username: root
         password: 123
-        driver-class-name: com.mysql.cj.jdbc.Driver
+        driver-class-name: com.mysql.jdbc.Driver
 
-    jpa:
-        show-sql: true
+  jpa:
+      properties:
         hibernate:
-          ddl-auto: none
+          show_sql: true
+          format_sql: true
+server:
+  port: 8888
 
 #    oldDataBase:
 #      jdbc-url: jdbc:mysql://localhost:3306/nationalOld?&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false

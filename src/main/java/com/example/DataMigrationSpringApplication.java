@@ -1,5 +1,6 @@
 package com.example;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
@@ -9,17 +10,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 @SpringBootApplication
-//@ComponentScan({"com.example.config"})
+@Slf4j
 public class DataMigrationSpringApplication implements CommandLineRunner {
-	@Autowired
-	@Qualifier("oldDataBase")
-	protected JdbcTemplate oldDataBase;
-
-	@Autowired
-	@Qualifier("newDataBase")
-	protected JdbcTemplate newDataBase;
-
-
 
 	public static void main(String[] args) {
 		SpringApplication.run(DataMigrationSpringApplication.class, args);
@@ -28,7 +20,7 @@ public class DataMigrationSpringApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... strings) throws Exception {
-
+		log.info("============启动后执行的代码！！！============");
 	}
 }
 

@@ -7,12 +7,14 @@ package com.example.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -35,8 +37,10 @@ public class oldDataSourceConfig {
     @Qualifier("oldDataBase")
     private DataSource oldDataSource;
 
+
     @Autowired
     private JpaProperties jpaProperties;
+
 
     @Primary
     @Bean(name = "entityManagerOld")
@@ -56,7 +60,7 @@ public class oldDataSourceConfig {
     }
 
     private Map<String, String> getVendorProperties(DataSource dataSource) {
-        return jpaProperties.getProperties();
+        return jpaProperties.getHibernateProperties(dataSource);
     }
 
     @Primary
