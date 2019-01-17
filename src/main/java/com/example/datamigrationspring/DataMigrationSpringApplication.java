@@ -41,7 +41,9 @@ public class DataMigrationSpringApplication {
 
 
 	public static void main(String[] args) {
-		//获取11月7日（含）到11月25日（含）并且未删除的量表
+        SpringApplication.run(DataMigrationSpringApplication.class, args);
+
+        //获取11月7日（含）到11月25日（含）并且未删除的量表
 		List<GaugeTemplate> gaugeTemplates = gaugeTemplateRepository.findByCreatedDateBetweenAndDelFlag("2018-11-07","2018-11-25",1);
 		//删除2.0中已有的量表
         gaugeTemplates.removeIf(DataMigrationSpringApplication::Duplicate);
@@ -85,7 +87,6 @@ public class DataMigrationSpringApplication {
 
 
 
-		SpringApplication.run(DataMigrationSpringApplication.class, args);
 	}
 
 
