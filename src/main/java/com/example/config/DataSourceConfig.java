@@ -7,38 +7,27 @@ import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.jdbc.core.JdbcTemplate;
-
 import javax.sql.DataSource;
 
+
 @Configuration
+@Slf4j
 public class DataSourceConfig {
 
     @Bean(name = "oldDataBase")
+    @Primary
     @Qualifier("oldDataBase")
-    @ConfigurationProperties(prefix="spring.datasource.oldDataBase")
-    public DataSource oldDataBase() {
+    @ConfigurationProperties(prefix = "spring.datasource.old")
+    public DataSource oldDataSource() {
+        log.info("=========oldDataBase=========");
         return DataSourceBuilder.create().build();
     }
 
     @Bean(name = "newDataBase")
     @Qualifier("newDataBase")
-    @Primary
-    @ConfigurationProperties(prefix="spring.datasource.newDataBase")
-    public DataSource newDataBase() {
+    @ConfigurationProperties(prefix = "spring.datasource.new")
+    public DataSource newDataSource() {
+        log.info("======newDataSource=======");
         return DataSourceBuilder.create().build();
     }
-
-    @Bean(name = "oldDataBase")
-    public JdbcTemplate primaryJdbcTemplate(
-            @Qualifier("oldDataBase") DataSource dataSource) {
-        return new JdbcTemplate(dataSource);
-    }
-
-    @Bean(name = "newDataBase")
-    public JdbcTemplate secondaryJdbcTemplate(
-            @Qualifier("newDataBase") DataSource dataSource) {
-        return new JdbcTemplate(dataSource);
-    }
-
 }

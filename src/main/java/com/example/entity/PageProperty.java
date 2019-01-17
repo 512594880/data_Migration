@@ -5,6 +5,7 @@ package com.example.entity;/**
 import lombok.Data;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.util.Date;
 
 /**
@@ -20,7 +21,7 @@ import java.util.Date;
 @Data
 public class PageProperty {
     private static final long serialVersionUID = 2171661971687207491L;
-
+    @Id
     private Long id;
 
     private String name;

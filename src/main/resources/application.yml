@@ -2,13 +2,23 @@ spring:
   profiles:
       active: dev
   datasource:
-    oldDataBase:
-      jdbc-url: jdbc:mysql://localhost:3306/nationalOld?&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
-      username: root
-      password: zh94061011
+    old:
+        jdbc-url: jdbc:mysql://localhost:3306/FirstDataBase?useUnicode=true&characterEncoding=UTF-8
+        username: root
+        password: 123
+        driver-class-name: com.mysql.cj.jdbc.Driver
+    new:
+        jdbc-url: jdbc:mysql://localhost:3306/SecondDataBase?useUnicode=true&characterEncoding=UTF-8
+        username: root
+        password: 123
+        driver-class-name: com.mysql.cj.jdbc.Driver
 
-    newDataBase:
-      jdbc-url: jdbc:mysql://localhost:3306/nationalNew?&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
-      username: root
-      password:
+    jpa:
+        show-sql: true
+        hibernate:
+          ddl-auto: none
 
+#    oldDataBase:
+#      jdbc-url: jdbc:mysql://localhost:3306/nationalOld?&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
+#      username: root
+#      password: zh94061011
