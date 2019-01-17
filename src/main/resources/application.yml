@@ -4,15 +4,15 @@ spring:
   datasource:
     old:
         type: com.alibaba.druid.pool.DruidDataSource
-        url: jdbc:mysql://localhost:3306/FirstDataBase?useUnicode=true&characterEncoding=UTF-8
+        url: jdbc:mysql://localhost:3306/1.0Data?useUnicode=true&characterEncoding=UTF-8
         username: root
-        password: 123
+        password: zh94061011
         driver-class-name: com.mysql.jdbc.Driver
     new:
         type: com.alibaba.druid.pool.DruidDataSource
-        url: jdbc:mysql://localhost:3306/SecondDataBase?useUnicode=true&characterEncoding=UTF-8
+        url: jdbc:mysql://localhost:3306/2.0data?useUnicode=true&characterEncoding=UTF-8
         username: root
-        password: 123
+        password: zh94061011
         driver-class-name: com.mysql.jdbc.Driver
 
   jpa:

@@ -28,4 +28,5 @@ dependencies {
 	runtimeOnly 'mysql:mysql-connector-java'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	compile(group: 'org.projectlombok', name: 'lombok', version: '1.18.4')
+	compile group: 'org.modelmapper', name: 'modelmapper', version: '2.3.2'
 }
