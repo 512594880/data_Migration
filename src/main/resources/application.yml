@@ -3,13 +3,13 @@ spring:
       active: dev
   datasource:
     old:
-        type: com.alibaba.druid.pool.DruidDataSource
+#        type: com.alibaba.druid.pool.DruidDataSource
         url: jdbc:mysql://localhost:3306/FirstDataBase?useUnicode=true&characterEncoding=UTF-8
         username: root
         password: 123
         driver-class-name: com.mysql.jdbc.Driver
     new:
-        type: com.alibaba.druid.pool.DruidDataSource
+#        type: com.alibaba.druid.pool.DruidDataSource
         url: jdbc:mysql://localhost:3306/SecondDataBase?useUnicode=true&characterEncoding=UTF-8
         username: root
         password: 123

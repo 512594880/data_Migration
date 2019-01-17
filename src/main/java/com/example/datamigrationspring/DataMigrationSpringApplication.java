@@ -126,7 +126,7 @@ public class DataMigrationSpringApplication {
         List<PageLayoutBigQuestion> pageLayoutBigQuestions = pageLayoutBigQuestionRepository.findByPageLayoutIdIn(pageLayoutIds);
         pageLayoutBigQuestions.forEach(pageLayoutBigQuestion -> {
             BigQuestion bigQuestion = bigQuestionRepository.findById(pageLayoutBigQuestion.getBigQuestionId()).get();
-            if (bigQuestionRepositoryNew.findByNameAndCreatedDate(bigQuestion.getName()).size() == 0){
+            if (bigQuestionRepositoryNew.findByNameAndCreatedDate(bigQuestion.getName(),bigQuestion.getCreatedDate()).size() == 0){
                 List<SmallQuestion> smallQuestions = smallQuestionRepository.findByBigQuestionId(bigQuestion.getId());
 
                 //插入bigQuestion

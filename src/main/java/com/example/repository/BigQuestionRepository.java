@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.beans.beancontext.BeanContextMembershipEvent;
+import java.util.Date;
 import java.util.Dictionary;
 import java.util.List;
 import java.util.Set;
@@ -16,5 +17,5 @@ public interface BigQuestionRepository extends JpaRepository<BigQuestion, Long> 
 
     List<BigQuestion> findByName(String name);
 
-    List<BigQuestion> findByNameAndCreatedDate(String name);
+    List<BigQuestion> findByNameAndCreatedDate(String name,Date createdDate);
 }

@@ -6,6 +6,7 @@ package com.example.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateSettings;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
@@ -53,14 +54,14 @@ public class oldDataSourceConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactoryOld(EntityManagerFactoryBuilder builder) {
         return builder
                 .dataSource(oldDataSource)
-                .properties(getVendorProperties(oldDataSource))
+                .properties(getVendorProperties())
                 .packages("com.example.entity") //设置实体类所在位置
                 .persistenceUnit("oldPersistenceUnit")
                 .build();
     }
 
-    private Map<String, String> getVendorProperties(DataSource dataSource) {
-        return jpaProperties.getHibernateProperties(dataSource);
+    private Map<String, Object> getVendorProperties() {
+        return jpaProperties.getHibernateProperties(new HibernateSettings());
     }
 
     @Primary
