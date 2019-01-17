@@ -9,6 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -34,16 +35,15 @@ public class newDataSourceConfig {
     @Qualifier("newDataBase")
     private DataSource newDataSource;
 
-    @Autowired(required=false)
+    @Autowired
     private JpaProperties jpaProperties;
 
-    @Primary
+
     @Bean(name = "entityManagerNew")
     public EntityManager entityManager(EntityManagerFactoryBuilder builder) {
         return entityManagerFactoryNew(builder).getObject().createEntityManager();
     }
 
-    @Primary
     @Bean(name = "entityManagerFactoryNew")
     public LocalContainerEntityManagerFactoryBean entityManagerFactoryNew(EntityManagerFactoryBuilder builder) {
         return builder
@@ -55,12 +55,13 @@ public class newDataSourceConfig {
     }
 
     private Map<String, String> getVendorProperties(DataSource dataSource) {
-        return jpaProperties.getProperties();
+        return jpaProperties.getHibernateProperties(dataSource);
     }
 
-    @Primary
+
     @Bean(name = "transactionManagerNew")
     public PlatformTransactionManager transactionManagerNew(EntityManagerFactoryBuilder builder) {
         return new JpaTransactionManager(entityManagerFactoryNew(builder).getObject());
     }
+
 }

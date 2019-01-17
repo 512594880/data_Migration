@@ -11,15 +11,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @SpringBootApplication
 //@ComponentScan({"com.example.config"})
 public class DataMigrationSpringApplication implements CommandLineRunner {
-	@Autowired
-	@Qualifier("oldDataBase")
-	protected JdbcTemplate oldDataBase;
-
-	@Autowired
-	@Qualifier("newDataBase")
-	protected JdbcTemplate newDataBase;
-
-
 
 	public static void main(String[] args) {
 		SpringApplication.run(DataMigrationSpringApplication.class, args);
