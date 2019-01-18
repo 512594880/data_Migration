@@ -3,9 +3,9 @@ package com.example.newEntity;/**
  */
 
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -19,12 +19,15 @@ import java.util.Date;
  */
 @Entity
 @Data
-public class BigQuestion {
+@Table(name="page_layout_property")
+public class PageLayoutPropertyNew {
     private static final long serialVersionUID = 2171661971687207491L;
     @Id
     private Long id;
 
-    private String name;
+    private Long pageLayoutId;
+
+    private Long pagePropertyId;
 
     private Date createdDate;
 
@@ -32,14 +35,6 @@ public class BigQuestion {
 
     private Integer delFlag;
 
-    private Integer rule;
 
-    private Long tId;
-
-    private Long createUserId;
-
-    private Long updateUserId;
-
-    private String prefix;
 
 }

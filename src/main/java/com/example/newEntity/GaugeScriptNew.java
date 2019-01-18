@@ -1,31 +1,34 @@
 package com.example.newEntity;
 
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
  *
- * @author: jinweiwei
- * @date: 2018/6/21
- * Time: 09:43
+ * @author: jiangxu
+ * @date: 2018/9/3
+ * Time: 13:49
  * To change this template use File | Settings | File Templates.
  * Description:
  */
 @Data
 @Entity
-public class GaugeTemplate implements Serializable{
+@Table(name="gauge_script")
+public class GaugeScriptNew implements Serializable{
     private static final long serialVersionUID = 2171661971687207491L;
     @Id
     private Long id;
 
-    private String templateName;
+    private String scriptName;
 
     private String description;
+
+    private String content;
 
     private Date createdDate;
 
@@ -35,14 +38,8 @@ public class GaugeTemplate implements Serializable{
 
     private Long createUserId;
 
-    private int gaugeCalcType;
-
     private String fileUrl;
 
     private Long updateUserId;
-
-    private String docTemplate;
-
-    private Long parent;
 
 }

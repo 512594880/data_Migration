@@ -1,9 +1,9 @@
 package com.example.newEntity;
 
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -18,7 +18,8 @@ import java.util.Date;
  */
 @Data
 @Entity
-public class GaugeResult implements Serializable{
+@Table(name="gauge_result")
+public class GaugeResultNew implements Serializable{
     private static final long serialVersionUID = -4535125661480495416L;
     @Id
     private Long id;

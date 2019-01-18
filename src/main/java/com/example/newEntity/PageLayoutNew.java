@@ -3,9 +3,9 @@ package com.example.newEntity;/**
  */
 
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -17,18 +17,19 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  * Description:
  */
-@Entity
 @Data
-public class PageLayoutProperty {
+@Entity
+@Table(name="page_layout")
+public class PageLayoutNew {
     private static final long serialVersionUID = 2171661971687207491L;
+
     @Id
     private Long id;
 
-    private Long pageLayoutId;
+    private String title;
 
-    private Long pagePropertyId;
-
-    private String name;
+    @Column(name = "[desc]")
+    private String desc;
 
     private Date createdDate;
 
@@ -36,7 +37,10 @@ public class PageLayoutProperty {
 
     private Integer delFlag;
 
+    private Long gaugeTemplateId;
+
     private Long tId;
 
+    private Integer sequence;
 
 }

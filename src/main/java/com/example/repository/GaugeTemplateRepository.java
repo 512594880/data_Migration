@@ -9,9 +9,8 @@ import java.util.List;
 
 @Repository
 public interface GaugeTemplateRepository extends JpaRepository<GaugeTemplate,Long>{
-    List<GaugeTemplate> findByCreatedDateBetweenAndDelFlag(String beginDate, String EndDate, int i);
+    List<GaugeTemplate> findByDelFlagAndCreatedDateBetween(int i,Date beginDate, Date EndDate);
 
     boolean findByTemplateName(String templateName);
 
-    boolean findByTemplateNameAndCreatedDate(String templateName, Date createdDate);
 }

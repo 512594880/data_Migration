@@ -2,10 +2,11 @@ package com.example.newEntity;/**
  * Created by jackmcgrady on 2018/9/11.
  */
 
+import com.example.entity.BigQuestion;
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -17,9 +18,10 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  * Description:
  */
-@Entity
 @Data
-public class PageProperty {
+@Entity
+@Table(name="big_question")
+public class BigQuestionNew {
     private static final long serialVersionUID = 2171661971687207491L;
     @Id
     private Long id;
@@ -32,12 +34,14 @@ public class PageProperty {
 
     private Integer delFlag;
 
-    private Long tId;
+    private Integer rule;
 
-    private Long pId;
+    private Long tId;
 
     private Long createUserId;
 
     private Long updateUserId;
+
+    private String prefix = "";
 
 }

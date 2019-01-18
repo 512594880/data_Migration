@@ -1,9 +1,9 @@
 package com.example.newEntity;
 
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -18,16 +18,17 @@ import java.util.Date;
  */
 @Data
 @Entity
-public class GaugeScript implements Serializable{
+@Table(name="gauge_template_script")
+public class GaugeTemplateScriptNew implements Serializable{
     private static final long serialVersionUID = 2171661971687207491L;
     @Id
     private Long id;
 
-    private String scriptName;
+    private Long templateId;
+
+    private Long scriptId;
 
     private String description;
-
-    private String content;
 
     private Date createdDate;
 
@@ -37,8 +38,7 @@ public class GaugeScript implements Serializable{
 
     private Long createUserId;
 
-    private String fileUrl;
-
     private Long updateUserId;
+
 
 }

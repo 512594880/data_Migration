@@ -3,8 +3,11 @@ package com.example.newEntity;/**
  */
 
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.util.Date;
 
@@ -17,17 +20,14 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  * Description:
  */
-@Data
 @Entity
-public class PageLayout {
+@Data
+public class PagePropertyNew {
     private static final long serialVersionUID = 2171661971687207491L;
-
     @Id
     private Long id;
 
-    private String title;
-
-    private String desc;
+    private String name;
 
     private Date createdDate;
 
@@ -35,10 +35,12 @@ public class PageLayout {
 
     private Integer delFlag;
 
-    private Long gaugeTemplateId;
-
     private Long tId;
 
-    private Integer sequence;
+    private Long pId;
+
+    private Long createUserId;
+
+    private Long updateUserId;
 
 }

@@ -28,15 +28,12 @@ public class PageLayoutProperty {
 
     private Long pagePropertyId;
 
-    private String name;
-
     private Date createdDate;
 
     private Date updatedDate;
 
     private Integer delFlag;
 
-    private Long tId;
 
 
 }

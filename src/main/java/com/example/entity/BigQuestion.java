@@ -40,6 +40,5 @@ public class BigQuestion {
 
     private Long updateUserId;
 
-    private String prefix;
 
 }

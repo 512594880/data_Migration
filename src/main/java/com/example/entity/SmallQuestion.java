@@ -49,39 +49,6 @@ public class SmallQuestion{
 
     private Integer sequence;
 
-    /**
-     * '是否可修改',true- 可以修改 false-不可以修改
-     */
-    private Boolean isEdit;
-
-    /**
-     * '是否填写默认值',true- 自动填入默认值 false-
-     */
-    private Boolean isDefault;
-
-    /**
-     * 下拉列表的组ID
-     */
-    private String groupId;
-
-    /**
-     * 默认值 绑定字段
-     */
-    private String defaultValue;
-
-    private String text;
-
-    /**
-     * 题目唯一标识, 1身高，2体重，3BMI，4舒张压，5收缩压
-     */
-    private Integer unique;
-
-    /**
-     * 验证方式
-     */
-    private String validate;
-
-
 }
 
 

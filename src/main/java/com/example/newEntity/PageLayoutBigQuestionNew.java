@@ -3,9 +3,9 @@ package com.example.newEntity;/**
  */
 
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -19,9 +19,11 @@ import java.util.Date;
  */
 @Entity
 @Data
-public class PageLayoutBigQuestion {
+@Table(name="page_layout_big_question")
+public class PageLayoutBigQuestionNew {
     private static final long serialVersionUID = 2171661971687207491L;
     @Id
+
     private Long id;
 
     private Long pageLayoutId;

@@ -4,9 +4,9 @@ package com.example.newEntity;/**
 
 
 import lombok.Data;
+import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -20,7 +20,8 @@ import java.util.Date;
  */
 @Entity
 @Data
-public class SmallQuestion{
+@Table(name="small_question")
+public class SmallQuestionNew {
     private static final long serialVersionUID = 2171661971687207491L;
     @Id
     private Long id;
@@ -43,6 +44,7 @@ public class SmallQuestion{
 
     private String placeholder;
 
+    @Column(name = "[option]")
     private String option;
 
     private Long tId;
@@ -52,34 +54,38 @@ public class SmallQuestion{
     /**
      * '是否可修改',true- 可以修改 false-不可以修改
      */
-    private Boolean isEdit;
+    @Column(name = "isedit")
+    private Boolean isEdit = false;
 
     /**
      * '是否填写默认值',true- 自动填入默认值 false-
      */
-    private Boolean isDefault;
+    @Column(name = "isdefault")
+    private Boolean isDefault = false;
 
     /**
      * 下拉列表的组ID
      */
+    @Column(name = "groupid")
     private String groupId;
 
     /**
      * 默认值 绑定字段
      */
+    @Column(name = "defaultvalue")
     private String defaultValue;
 
-    private String text;
 
     /**
      * 题目唯一标识, 1身高，2体重，3BMI，4舒张压，5收缩压
      */
-    private Integer unique;
+    @Column(name = "[unique]")
+    private Integer unique = 0;
 
     /**
      * 验证方式
      */
-    private String validate;
+    private String validate = "";
 
 
 }
