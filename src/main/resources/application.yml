@@ -3,14 +3,17 @@ spring:
       active: dev
   datasource:
     old:
-        type: com.alibaba.druid.pool.DruidDataSource
         url: jdbc:mysql://localhost:3306/1.0Data?useUnicode=true&characterEncoding=UTF-8
         username: root
         password: zh94061011
         driver-class-name: com.mysql.jdbc.Driver
     new:
-        type: com.alibaba.druid.pool.DruidDataSource
         url: jdbc:mysql://localhost:3306/2.0data?useUnicode=true&characterEncoding=UTF-8
+        username: root
+        password: zh94061011
+        driver-class-name: com.mysql.jdbc.Driver
+    server:
+        url: jdbc:mysql://localhost:3306/national_service?useUnicode=true&characterEncoding=UTF-8
         username: root
         password: zh94061011
         driver-class-name: com.mysql.jdbc.Driver
@@ -18,7 +21,7 @@ spring:
   jpa:
       properties:
         hibernate:
-          show_sql: true
+#          show_sql: true
           format_sql: true
 server:
   port: 8888

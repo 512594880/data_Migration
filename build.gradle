@@ -25,6 +25,7 @@ sourceCompatibility = '1.8'
 
 repositories {
 	mavenCentral()
+	maven { url 'http://114.55.40.105:8081/repository/hitales-maven/' }
 }
 
 dependencies {
@@ -39,7 +40,11 @@ dependencies {
 	compile 'mysql:mysql-connector-java'
 	compile("org.springframework.boot:spring-boot-starter-jdbc")
 	compile 'org.projectlombok:lombok:1.16.18'
-
+	compile 'org.apache.poi:poi-ooxml:4.0.0'
+	compile 'com.hitales:hitales-commons-core:0.2.0-SNAPSHOT'
+	compile 'com.hitales:hitales-commons-jpa:0.2.0-SNAPSHOT'
+	compile group: 'commons-logging', name: 'commons-logging', version: '1.2'
+	compile group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.1.2.RELEASE'
 }
 
 

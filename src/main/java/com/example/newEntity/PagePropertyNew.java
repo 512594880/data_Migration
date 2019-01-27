@@ -5,10 +5,7 @@ package com.example.newEntity;/**
 import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -22,6 +19,7 @@ import java.util.Date;
  */
 @Entity
 @Data
+@Table(name="page_property")
 public class PagePropertyNew {
     private static final long serialVersionUID = 2171661971687207491L;
     @Id

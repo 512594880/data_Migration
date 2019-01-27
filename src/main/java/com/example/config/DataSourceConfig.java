@@ -44,12 +44,29 @@ public class DataSourceConfig {
         return secondaryDataSourceProperties().initializeDataSourceBuilder().build();
     }
 
+    @Bean(name = "nationalServer")
+    @Qualifier("nationalServer")
+    @ConfigurationProperties(prefix = "spring.datasource.server")
+    public DataSource nationNalServer() {
+//        log.info("======newDataSource=======");
+//        return DataSourceBuilder.create().build();
+        return thirdDataSourceProperties().initializeDataSourceBuilder().build();
+    }
+
 
     @Bean(name = "secondaryDataSourceProperties")
     @Qualifier("secondaryDataSourceProperties")
     @ConfigurationProperties(prefix = "spring.datasource.new")
     public DataSourceProperties secondaryDataSourceProperties() {
         System.out.println("222222222222222222");
+        return new DataSourceProperties();
+    }
+
+    @Bean(name = "thirdDataSourceProperties")
+    @Qualifier("thirdDataSourceProperties")
+    @ConfigurationProperties(prefix = "spring.datasource.server")
+    public DataSourceProperties thirdDataSourceProperties() {
+        System.out.println("3333333");
         return new DataSourceProperties();
     }
 

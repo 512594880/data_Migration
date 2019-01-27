@@ -8,9 +8,7 @@ import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -20,37 +18,33 @@ import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 import java.util.Map;
 
-/**
- * Created by wangxi on 2019/1/17.
- */
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(
-        entityManagerFactoryRef = "entityManagerFactoryNew",
-        transactionManagerRef = "transactionManagerNew",
-        basePackages = {"com.example.newRepository"}) //设置Repository所在位置
+        entityManagerFactoryRef = "entityManagerFactoryServer",
+        transactionManagerRef = "transactionManagerServer",
+        basePackages = {"com.example.nationalServerRepository"}) //设置Repository所在位置
 @ComponentScan({"com.example.config"})
-public class newDataSourceConfig {
-
+public class nationalServerSourceConfig {
     @Autowired
-    @Qualifier("newDataBase")
+    @Qualifier("nationalServer")
     private DataSource newDataSource;
 
     @Autowired
     private JpaProperties jpaProperties;
 
 
-    @Bean(name = "entityManagerNew")
+    @Bean(name = "entityManagerServer")
     public EntityManager entityManager(EntityManagerFactoryBuilder builder) {
         return entityManagerFactoryNew(builder).getObject().createEntityManager();
     }
 
-    @Bean(name = "entityManagerFactoryNew")
+    @Bean(name = "entityManagerFactoryServer")
     public LocalContainerEntityManagerFactoryBean entityManagerFactoryNew(EntityManagerFactoryBuilder builder) {
         return builder
                 .dataSource(newDataSource)
                 .properties(getVendorProperties())
-                .packages("com.example.newEntity") //设置实体类所在位置
+                .packages("com.example.entityServer") //设置实体类所在位置
                 .persistenceUnit("newPersistenceUnit")
                 .build();
     }
@@ -60,9 +54,8 @@ public class newDataSourceConfig {
     }
 
 
-    @Bean(name = "transactionManagerNew")
+    @Bean(name = "transactionManagerServer")
     public PlatformTransactionManager transactionManagerNew(EntityManagerFactoryBuilder builder) {
         return new JpaTransactionManager(entityManagerFactoryNew(builder).getObject());
     }
-
 }
