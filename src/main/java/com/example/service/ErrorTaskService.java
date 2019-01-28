@@ -76,14 +76,14 @@ public class ErrorTaskService {
                     String 处理方式 = "";
                     Set<String> labelStrSetResult = new HashSet<>();
 
-                    Optional<Patient> patientOptional = patientRepository.findById(patientId);
-                    Patient patient;
-                    if (!patientOptional.isPresent()){
-                        System.err.println("居民ID不存在:"+patientId);
-                        return;
-                    }else {
-                        patient = patientOptional.get();
-                    }
+                    Patient patient = patientRepository.findById(patientId).orElseThrow(()->new Exception("居民ID不存在:"+patientId));
+//                    Patient patient;
+//                    if (!patientOptional.isPresent()){
+//                        System.err.println("居民ID不存在:"+patientId);
+//                        return;
+//                    }else {
+//                        patient = patientOptional.get();
+//                    }
 
                     String taskLabelName = task.getName().replace("随访", "");
                     List<PatientLabelDetail> patientLabelDetails = patientLabelDetailRepository.findByPatientId(patientId);
@@ -199,7 +199,8 @@ public class ErrorTaskService {
                         saveResult(result, patient, labelStr , hospital, No, 下发方式, 是否糖并高, 和台账一致性, 居民健康档案, 置信度, 处理方式);
                     }
                 }catch (Exception e){
-                    System.err.println("报错 id："+patientId);
+
+                    System.err.println("报错 id："+patientId + "报错信息：" + e.getMessage());
                 }
 
 
