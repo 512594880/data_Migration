@@ -82,7 +82,6 @@ public class ErrorTaskService {
 
                     patientLabelDetail.setTaskLabelId(taskLabel.getId());
                     patientLabelDetail.setCreatedDate(new Date());
-                    //TODO 创建日期
                     patientLabelDetails.add(patientLabelDetail);
                 });
 
