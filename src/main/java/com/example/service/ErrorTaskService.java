@@ -10,8 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -42,7 +45,55 @@ public class ErrorTaskService {
     //健康档案号档案号map
     private static Map<String,List<String>> healthEhrNo = new HashMap<>();
 
-    public void getErrorTask() throws IOException {
+    /**
+     * 修改数据库中的标签
+     * @throws IOException
+     */
+    public void updatePatientLabel() throws IOException {
+        //操作:1.手动删除patient_label_detail表
+        //2.读取居民标签统计加卫生室加标签表，插入patient_label_detail表
+        patientLabelDetailRepository.deleteAll();
+        InputStream inputStreamPatientLabel = new FileInputStream("./居民标签统计加卫生室加标签.xlsx");
+        XSSFWorkbook xssfWorkbookPatientLabel = new XSSFWorkbook(inputStreamPatientLabel);
+        XSSFSheet xssfSheetPatientLabel = xssfWorkbookPatientLabel.getSheetAt(0);
+        List<PatientLabelDetail> patientLabelDetails = new ArrayList<>();
+        xssfSheetPatientLabel.forEach(cells->{
+            if (cells.getCell(15) != null && !"任务标签".equals(cells.getCell(15).toString())){
+                String [] labelStr = cells.getCell(15).toString().split("，");
+                Long patientId = Long.valueOf(cells.getCell(0).toString());
+                Arrays.stream(labelStr).forEach(label->{
+                    TaskLabel taskLabel = taskLabelRepository.findByName(label);
+                    PatientLabelDetail patientLabelDetail = new PatientLabelDetail();
+                    patientLabelDetail.setPatientId(patientId);
+
+                    if (taskLabel == null){
+                        taskLabel = new TaskLabel();
+                        taskLabel.setName(label);
+                        taskLabel.setDescription(label);
+                        taskLabel.setType(1);
+                        String pidName = "砚山县" + label.replaceAll(".*(高血压|糖尿病|糖并高|精神病).*","$1") + "人群";
+                        taskLabel.setPId(taskLabelRepository.findByName(pidName).getId());
+                        taskLabel.setCreatedDate(new Date());
+                        taskLabel.setCreateUserId(6L);
+
+                        taskLabel = taskLabelRepository.save(taskLabel);
+                        System.out.println("新增标签：" +  label);
+                    }
+
+                    patientLabelDetail.setTaskLabelId(taskLabel.getId());
+                    patientLabelDetail.setCreatedDate(new Date());
+                    //TODO 创建日期
+                    patientLabelDetails.add(patientLabelDetail);
+                });
+
+            }
+        });
+        patientLabelDetailRepository.saveAll(patientLabelDetails);
+    }
+
+
+
+    public void getErrorTask() throws IOException, ParseException {
         saveMapData();
 
         XSSFWorkbook xssfWorkbook = new XSSFWorkbook();
@@ -56,13 +107,14 @@ public class ErrorTaskService {
         Map<Long,List<Integer>> mapSpecaial6Index = new HashMap<>();
         //特殊处理编号为7的数据行号
         Map<Long,List<String>> mapSpecaial7 = new HashMap<>();
-
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = sdf.parse("2019-01-01");
         tasks.forEach(task -> {
             if (!task.getName().matches(".*(高血压|糖尿病|糖并高|精神病).*")){
                 return;
             }
 
-            List<TaskPatient> taskPatients = taskPatientRepository.findByTaskId(task.getId());
+            List<TaskPatient> taskPatients = taskPatientRepository.findByTaskIdAndCreatedDateBefore(task.getId(),date);
             taskPatients.forEach(taskPatient -> {
                 Long patientId = taskPatient.getPatientId();
                 try {
@@ -182,7 +234,7 @@ public class ErrorTaskService {
                                 和台账一致性 = "不一致";
                                 置信度 = "低";
                                 处理方式 = "不下发";
-                                labelStrSetResult.addAll(taizhangLabel);
+//                                labelStrSetResult.addAll(taizhangLabel);
                             }
 
                         }
@@ -320,6 +372,7 @@ public class ErrorTaskService {
         }
         return new ArrayList<>();
     }
+
 
 
 }

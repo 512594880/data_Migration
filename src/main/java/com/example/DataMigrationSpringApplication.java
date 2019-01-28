@@ -146,9 +146,10 @@ public class DataMigrationSpringApplication implements CommandLineRunner {
 	//手机号正则
 	private static String pthoneRegex = "^((\\+?86)|(\\(\\+86\\)))?(13[012356789][0-9]{8}|15[012356789][0-9]{8}|18[02356789][0-9]{8}|147[0-9]{8}|1349[0-9]{7})$";
 	@Override
-	public void run(String ... strings) throws IOException {
+	public void run(String ... strings) throws IOException, ParseException {
 		//根据任务获取标签信息
-		errorTaskService.getErrorTask();
+//		errorTaskService.getErrorTask();
+		errorTaskService.updatePatientLabel();
 //		updatePatientLabel();
 //		if (strings.length == 0 || "Server".equals(strings[0])){
 //			System.out.println("开始2.0到3.0医生域数据迁移");
