@@ -1,6 +1,7 @@
 package com.example;
 
 import com.example.Util.CardNumberUtil;
+import com.example.Util.ExcelUtil;
 import com.example.entity.*;
 import com.example.entityServer.DoctorClinic;
 import com.example.entityServer.DoctorContact;
@@ -12,10 +13,12 @@ import com.example.nationalServerRepository.DoctorServerRepository;
 import com.example.newEntity.*;
 import com.example.newRepository.*;
 import com.example.repository.*;
+import com.example.service.ErrorTaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.checkerframework.checker.units.qual.A;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -131,6 +134,9 @@ public class DataMigrationSpringApplication implements CommandLineRunner {
 	protected TaskLabelRepository taskLabelRepository;
 
 	@Autowired
+	protected ErrorTaskService errorTaskService;
+
+	@Autowired
 	protected PatientLabelDetailRepository patientLabelDetailRepository;
 
 	private static Map<Long,List<String>> doctorsInfo = new HashMap<>();
@@ -141,7 +147,9 @@ public class DataMigrationSpringApplication implements CommandLineRunner {
 	private static String pthoneRegex = "^((\\+?86)|(\\(\\+86\\)))?(13[012356789][0-9]{8}|15[012356789][0-9]{8}|18[02356789][0-9]{8}|147[0-9]{8}|1349[0-9]{7})$";
 	@Override
 	public void run(String ... strings) throws IOException {
-		updatePatientLabel();
+		//根据任务获取标签信息
+		errorTaskService.getErrorTask();
+//		updatePatientLabel();
 //		if (strings.length == 0 || "Server".equals(strings[0])){
 //			System.out.println("开始2.0到3.0医生域数据迁移");
 //			dataMigrationToNationalServer();
@@ -280,7 +288,7 @@ public class DataMigrationSpringApplication implements CommandLineRunner {
 		XSSFWorkbook errorInfo = new XSSFWorkbook();
 		XSSFSheet errorDoctorInfo = errorInfo.createSheet("医生错误信息");
 		String heading [] = new String[]{"医生ID","医生身份证","医生所在卫生室","医生电话"};
-		setHeading(errorDoctorInfo,heading);
+		ExcelUtil.setHeading(errorDoctorInfo,heading);
 		//TODO DoctorClinic关联 辖区待处理
 		List<Hospital> hospitals = hospitalRepository.findByParentId(null);
 
@@ -339,7 +347,7 @@ public class DataMigrationSpringApplication implements CommandLineRunner {
 		});
 		XSSFSheet contactError = errorInfo.createSheet("contact错误信息");
 		String [] contactErrorHeading  = new String[]{"医生Id","电话"};
-		setHeading(contactError,contactErrorHeading);
+		ExcelUtil.setHeading(contactError,contactErrorHeading);
 		//Contact迁移
 		List<Contact> contacts = contactRepository.findByUserId();
 		contacts.forEach(contact -> {
@@ -441,7 +449,7 @@ public class DataMigrationSpringApplication implements CommandLineRunner {
 
 		XSSFSheet xssfSheetByArea = xssfWorkbook.createSheet("以地区关联关系为基准");
 		String xssfSheetByAreaHeading [] = new String[]{"医生Id","医生所属卫生室","卫生室所在地区","居民Id","居民所在地区"};
-		setHeading(xssfSheetByArea,xssfSheetByAreaHeading);
+		ExcelUtil.setHeading(xssfSheetByArea,xssfSheetByAreaHeading);
 		mapDifferentToRow(relationShipMap, relationShipMapByDoctorPatient, xssfSheetByArea,false,areaAndHospitalArea);
 
 
@@ -478,7 +486,7 @@ public class DataMigrationSpringApplication implements CommandLineRunner {
 	private void patientAreaAndHospitalArea(XSSFWorkbook xssfWorkbook, Map<String, List<Long>> areaAndHospitalArea) {
 		XSSFSheet xssfSheet = xssfWorkbook.createSheet("居民地区对应卫生室地区");
 		String heading [] = new String[]{"居民所在地区","对应卫生室所在地区","居民id列表"};
-		setHeading(xssfSheet,heading);
+		ExcelUtil.setHeading(xssfSheet,heading);
 		areaAndHospitalArea.forEach((k,v)->{
 			Row row = xssfSheet.createRow(xssfSheet.getLastRowNum()+1);
 			row.createCell(0).setCellValue(k.split("，")[0]);
@@ -490,7 +498,7 @@ public class DataMigrationSpringApplication implements CommandLineRunner {
 	private void hospitalAreaRalation(XSSFWorkbook xssfWorkbook, Map<Long, List<Long>> relationShipMapByDoctorPatient) {
 		XSSFSheet hospitalAreaRalationSheet = xssfWorkbook.createSheet("卫生室和地区对应");
 		String heading []= new String[]{"卫生室","卫生室管辖地区"};
-		setHeading(hospitalAreaRalationSheet,heading);
+		ExcelUtil.setHeading(hospitalAreaRalationSheet,heading);
 		Map<String,String> hospitalAreaRalation = new HashMap<>();
 		relationShipMapByDoctorPatient.forEach((k,v)->{
 			if (doctorsInfo.get(k) != null){
@@ -513,7 +521,7 @@ public class DataMigrationSpringApplication implements CommandLineRunner {
 	private void maybeError(XSSFSheet xssfSheetByArea, XSSFWorkbook xssfWorkbook) {
 		XSSFSheet xssfSheet = xssfWorkbook.createSheet("卫生室管辖地区可能有误");
 		String heading [] = new String[]{"医生所属卫生室","卫生室所在地区"};
-		setHeading(xssfSheet,heading);
+		ExcelUtil.setHeading(xssfSheet,heading);
 		Map<String,String> clinicAndArea = new HashMap<>();
 		for (int i = 1; i <= xssfSheetByArea.getLastRowNum(); i++) {
 			Row row = xssfSheetByArea.getRow(i);
@@ -528,11 +536,7 @@ public class DataMigrationSpringApplication implements CommandLineRunner {
 		});
 	}
 
-	private void setHeading(XSSFSheet xssfSheet,String heading []){
-		Row headingRow = xssfSheet.createRow(0) ;
-		Arrays.stream(heading).forEach(s -> headingRow.createCell(headingRow.getLastCellNum() == -1?0:headingRow.getLastCellNum()).setCellValue(s));
 
-	}
 
 	private void mapDifferentToRow(Map<Long, List<Long>> relationShipMapByDoctorPatient, Map<Long, List<Long>> relationShipMap, XSSFSheet xssfSheet, boolean put, Map<String, List<Long>> areaAndHospitalArea) {
 		relationShipMapByDoctorPatient.forEach((k,v)->{
