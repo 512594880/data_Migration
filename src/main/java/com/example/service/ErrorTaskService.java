@@ -47,7 +47,7 @@ public class ErrorTaskService {
 
         XSSFWorkbook xssfWorkbook = new XSSFWorkbook();
         XSSFSheet result = xssfWorkbook.createSheet("标签决策表");
-        String [] headig = new String[]{"居民ID","疾病标签","任务卫生室","居民姓名","居民身份证号","居民档案号","编号","下发方式","是否糖并高","和台账一致性","居民健康档案","置信度","处理方式"};
+        String [] headig = new String[]{"居民ID","疾病标签","任务卫生室","居民姓名","居民身份证号","居民档案号","编号","下发方式","是否糖并高","和台账一致性","居民健康档案","置信度","处理方式","任务开始时间","任务结束时间","任务完成时间"};
         ExcelUtil.setHeading(result,headig);
         List<Task> tasks = taskRepository.findAll();
         //特殊处理编号为6的数据
@@ -76,14 +76,8 @@ public class ErrorTaskService {
                     String 处理方式 = "";
                     Set<String> labelStrSetResult = new HashSet<>();
 
-                    Patient patient = patientRepository.findById(patientId).orElseThrow(()->new Exception("居民ID不存在:"+patientId));
-//                    Patient patient;
-//                    if (!patientOptional.isPresent()){
-//                        System.err.println("居民ID不存在:"+patientId);
-//                        return;
-//                    }else {
-//                        patient = patientOptional.get();
-//                    }
+                    Patient patient = patientRepository.findByTIdAndId(3L,patientId).orElseThrow(()->new Exception("居民ID不存在:"+patientId));
+//
 
                     String taskLabelName = task.getName().replace("随访", "");
                     List<PatientLabelDetail> patientLabelDetails = patientLabelDetailRepository.findByPatientId(patientId);
@@ -125,7 +119,7 @@ public class ErrorTaskService {
                                         return;
                                     }
                                 }else {
-                                    saveResult(result, patient, labelStr , hospital, 1, 下发方式, 是否糖并高, "是", 居民健康档案, "高", "");
+                                    saveResult(result, patient, labelStr , hospital, 1, 下发方式, 是否糖并高, "是", 居民健康档案, "高", "", task.getBeginDate(), task.getEndDate(), taskPatient.getUpdatedDate(), taskPatient.getStatus());
                                     List<Integer> index = new ArrayList<>();
                                     for (int i = result.getLastRowNum()+1; i < result.getLastRowNum()+1 + labelStrSetResult.size(); i++) {
                                         index.add(i);
@@ -183,20 +177,22 @@ public class ErrorTaskService {
                                 置信度 = "低";
                                 处理方式 = "暂时以\"糖并高\"";
                             } else {
-                                No = 5;
-                                和台账一致性 = "台账无信息";
+                                //No为9
+                                No = 9;
+                                和台账一致性 = "不一致";
                                 置信度 = "低";
-                                处理方式 = "暂时以\"糖并高\"";
+                                处理方式 = "不下发";
+                                labelStrSetResult.addAll(taizhangLabel);
                             }
 
                         }
                     }
                     if (labelStrSetResult.size()>0){
                         for (String s : labelStrSetResult){
-                            saveResult(result, patient, s , hospital, No, 下发方式, 是否糖并高, 和台账一致性, 居民健康档案, 置信度, 处理方式);
+                            saveResult(result, patient, s , hospital, No, 下发方式, 是否糖并高, 和台账一致性, 居民健康档案, 置信度, 处理方式,task.getBeginDate(),task.getEndDate(),taskPatient.getUpdatedDate(),taskPatient.getStatus());
                         }
                     }else {
-                        saveResult(result, patient, labelStr , hospital, No, 下发方式, 是否糖并高, 和台账一致性, 居民健康档案, 置信度, 处理方式);
+                        saveResult(result, patient, labelStr , hospital, No, 下发方式, 是否糖并高, 和台账一致性, 居民健康档案, 置信度, 处理方式,task.getBeginDate(),task.getEndDate(),taskPatient.getUpdatedDate(),taskPatient.getStatus());
                     }
                 }catch (Exception e){
 
@@ -219,7 +215,7 @@ public class ErrorTaskService {
 
     }
 
-    private void saveResult(XSSFSheet result, Patient patient, String labelStr, String hospital, Integer no, String 下发方式, String 是否糖并高, String 和台账一致性, String 居民健康档案, String 置信度, String 处理方式) {
+    private void saveResult(XSSFSheet result, Patient patient, String labelStr, String hospital, Integer no, String 下发方式, String 是否糖并高, String 和台账一致性, String 居民健康档案, String 置信度, String 处理方式, Date beginDate, Date endDate, Date updatedDate, Integer status) {
         Row row = result.createRow(result.getLastRowNum()+1);
         row.createCell(0).setCellValue(patient.getId());
         row.createCell(1).setCellValue(labelStr);
@@ -234,6 +230,11 @@ public class ErrorTaskService {
         row.createCell(10).setCellValue(居民健康档案);
         row.createCell(11).setCellValue(置信度);
         row.createCell(12).setCellValue(处理方式);
+        row.createCell(13).setCellValue(beginDate.toString());
+        row.createCell(14).setCellValue(endDate.toString());
+        if (status == 2){
+            row.createCell(15).setCellValue(updatedDate.toString());
+        }
     }
 
     private void saveMapData() throws IOException {
