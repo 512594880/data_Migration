@@ -15,4 +15,6 @@ public interface TaskLabelRepository extends JpaRepository<TaskLabel,Long> {
 
 
     List<TaskLabel> findByNameAndIdIn(String taskLabelName, List<Long> labelIds);
+
+    List<TaskLabel> findByIdIn(List<Long> taskLabelIds);
 }

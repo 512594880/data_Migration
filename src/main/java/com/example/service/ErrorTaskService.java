@@ -3,6 +3,7 @@ package com.example.service;
 import com.example.Util.ExcelUtil;
 import com.example.newEntity.*;
 import com.example.newRepository.*;
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -65,7 +66,6 @@ public class ErrorTaskService {
                     TaskLabel taskLabel = taskLabelRepository.findByName(label);
                     PatientLabelDetail patientLabelDetail = new PatientLabelDetail();
                     patientLabelDetail.setPatientId(patientId);
-
                     if (taskLabel == null){
                         taskLabel = new TaskLabel();
                         taskLabel.setName(label);
@@ -127,6 +127,9 @@ public class ErrorTaskService {
                     String 处理方式 = "";
                     Set<String> labelStrSetResult = new HashSet<>();
 
+                    if (patientId == 576877){
+                        System.out.println();
+                    }
                     Patient patient = patientRepository.findByTIdAndId(3L,patientId).orElseThrow(()->new Exception("居民ID不存在:"+patientId));
 //
 

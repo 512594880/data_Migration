@@ -20,6 +20,7 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = false)
 public class DoctorServer extends AuditableEntity {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", columnDefinition = "bigint(20) unsigned  comment '系统ID'")
     private Long id;
 

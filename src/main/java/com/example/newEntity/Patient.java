@@ -51,7 +51,7 @@ public class Patient implements Serializable{
 
     private String ehrNumber;
 
-
+    private String causeOfPovert;
 
 
 }
